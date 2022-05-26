@@ -2,7 +2,7 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Auth from "../routes/Auth";
 import Home from "../routes/Home";
 
-const AppRouter = ({ isLoggedIn }) => {
+const AppRouter = ({ isLoggedIn, isLoggedOut }) => {
   return (
     <Router>
       <Routes>
@@ -12,6 +12,13 @@ const AppRouter = ({ isLoggedIn }) => {
           </>
         ) : (
           <Route path="/" element={<Auth />} />
+        )}
+        {isLoggedOut ? (
+          <>
+            <Route path="/" element={<Auth />} />
+          </>
+        ) : (
+          <Route path="/" element={<Home />} />
         )}
       </Routes>
     </Router>

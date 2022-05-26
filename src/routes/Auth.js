@@ -3,13 +3,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { authService } from "fbase";
+import { authService, firebaseInstance } from "fbase";
 import { async } from "@firebase/util";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [newAccount, setNewAccount] = useState(false);
+  const [newAccount, setNewAccount] = useState(true);
+  const [error, setError] = useState();
   const onChange = event => {
     const {
       target: { name, value },
@@ -34,7 +35,27 @@ const Auth = () => {
       }
       console.log(data);
     } catch (error) {
-      console.log(error);
+      setError(error.message);
+    }
+  };
+  const toggleAccount = () => {
+    setNewAccount(toggle => !toggle);
+  };
+  const onSocialLogin = async event => {
+    const {
+      target: { name },
+    } = event;
+    let provider;
+    try {
+      if (name === "google") {
+        provider = new firebaseInstance.auth.GoogleAuthProvider();
+      } else if (name === "github") {
+        provider = new firebaseInstance.auth.GithubAuthProvider();
+      }
+      const data = await authService.signInWithPopup(provider);
+      console.log(data);
+    } catch (error) {
+      console.log(error.message);
     }
   };
   return (
@@ -64,9 +85,15 @@ const Auth = () => {
         />
       </form>
       <div>
-        <button>깃허브로 로그인</button>
-        <button>구글로 로그인</button>
+        <button name="github" onClick={onSocialLogin}>
+          깃허브로 로그인
+        </button>
+        <button name="google" onClick={onSocialLogin}>
+          구글로 로그인
+        </button>
       </div>
+      <div onClick={toggleAccount}>{newAccount ? "로그인" : "회원가입"}</div>
+      <div>{error}</div>
     </div>
   );
 };
