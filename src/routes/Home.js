@@ -1,21 +1,26 @@
 import React, { useState } from "react";
-import { authService, firebaseInstance } from "fbase";
 
 const Home = () => {
-  const [isLoggedOut, setLoggedOut] = useState(false);
-  const onSignout = async isLoggedOut => {
-    try {
-      const data = await authService.signOut();
-      console.log(data);
-      setLoggedOut(toggle => !toggle);
-    } catch (error) {
-      console.log(error.message);
-    }
+  const [nWitter, setnWitter] = useState("");
+  const onSubmit = event => {
+    event.preventDefault();
+  };
+  const onChange = event => {
+    const {
+      target: { value },
+    } = event;
   };
   return (
     <div>
-      <span>Home</span>
-      <button onClick={onSignout}>로그아웃</button>
+      <h1>Home</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          placeholder="내용을 입력하세요"
+          maxLength="120"
+        ></input>
+        <input type="submit" value="입력" />
+      </form>
     </div>
   );
 };
